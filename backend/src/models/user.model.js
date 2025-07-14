@@ -39,8 +39,14 @@ const userSchema = new Schema({
     },
     imageUrl:{
         type: String,
-
-    }
+    },
+    otp:{
+        type: String,
+    },
+    isActive:{
+        type: Boolean,
+        default:  false
+    } 
 
 },{timestamps:true});
 

@@ -24,14 +24,14 @@ const SignupForm = () => {
 
   const handleImageChange = (e) => {
     // console.log('run')
-    console.log(e.target.files[0])
+    // console.log(e.target.files[0])
     setImageFile(e.target.files[0])
   }
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    // console.log(formData);
 
     let imageurl = "";
 
@@ -42,14 +42,15 @@ const SignupForm = () => {
       "http://localhost:8080/api/v1/users/upload",
       imageData
     );
-    console.log(res);
+    // console.log(res);
 
-    imageurl = res.data.imageurl;
+    imageurl = res.data.imageUrl;
 
     const sendData = {
       ...formData,
-      image: imageurl,
+      imageUrl: imageurl,
     };
+    // console.log(sendData);
 
     // TODO: Replace with your actual API endpoint
     await axios.post("http://localhost:8080/api/v1/users/register", sendData)
