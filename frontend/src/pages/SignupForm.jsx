@@ -42,7 +42,7 @@ const SignupForm = () => {
     imageData.append("image", imageFile);
 
     const res = await axios.post(
-      "http://localhost:8080/api/v1/users/upload",
+      `${import.meta.env.VITE_BASE_URL}/upload`,
       imageData
     );
     // console.log(res);
@@ -55,8 +55,7 @@ const SignupForm = () => {
     };
     // console.log(sendData);
 
-    // TODO: Replace with your actual API endpoint
-    await axios.post("http://localhost:8080/api/v1/users/register", sendData)
+    await axios.post(`${import.meta.env.VITE_BASE_URL}/register`, sendData)
       .then((res) => {
         alert("Signup successful!: Now check your email.");
         navigate('/verify', {

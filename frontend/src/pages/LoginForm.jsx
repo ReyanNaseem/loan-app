@@ -30,7 +30,7 @@ const LoginForm = () => {
     //     headers: { 'Content-Type': 'application/json' },
     //     body: JSON.stringify(formData),
     //   });
-    axios.post('http://localhost:8080/api/v1/users/login', formData)
+    axios.post(`${import.meta.env.VITE_BASE_URL}/login`, formData)
     .then((res)=>{
         console.log(res.data);
         navigate('/home');

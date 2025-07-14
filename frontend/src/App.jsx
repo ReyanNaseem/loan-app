@@ -6,6 +6,7 @@ import SignupForm from './pages/SignupForm'
 import OtpVerify from './pages/OtpVerify'
 import LoginForm from './pages/LoginForm';
 import Home from './pages/Home';
+import ApplyLoan from './pages/ApplyLoan';
 
 function App() {
 
@@ -17,6 +18,8 @@ function App() {
         <Route path='/verify' element={<OtpVerify/>}/>
         <Route path='/login' element={<LoginForm/>}/>
         <Route path='/home' element={<Home/>}/>
+        <Route path='/apply-loan' element={<ApplyLoan/>}/>
+        <Route path='*' element={<h1>404 NOT FOUND</h1>}/>
       </Routes>
     </main>
     </>

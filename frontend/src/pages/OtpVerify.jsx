@@ -32,7 +32,7 @@ const OtpVerify = ({ onVerify }) => {
     e.preventDefault();
     const code = otp.join('');
     if (code.length === OTP_LENGTH) {
-      await axios.post('http://localhost:8080/api/v1/users/verify', {email:location.state.email})
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/verify`, {email:location.state.email})
       .then((res)=>{
           console.log(res.data);
           navigate('/login');
