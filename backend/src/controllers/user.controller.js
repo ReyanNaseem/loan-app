@@ -108,4 +108,81 @@ const uploadUser = async (req, res)=>{
     
 }
 
-export {registerUser, uploadUser};
+const verifyUser = async (req, res)=>{
+  try {
+    const { email, otp } = req.body;
+    const existUser = await User.findOne({email});
+
+    if(existUser.otp !== otp){
+      res.status(401).json({
+        message: 'OTP not verified',
+      })
+    }
+    console.log(existUser);
+    existUser.isActive = true;
+    await existUser.save();
+
+    res.status(201).json({
+      message: 'Email verified successfully'
+    })
+
+  } catch (error) {
+    res.status(600).json({
+      message: 'An error occur while verifying user',
+      error: error.message
+    })
+  }
+}
+
+const loginUser = async (req, res)=>{
+  try {
+    const { email, password } = req.body;
+    if( !email || !password ){
+      res.status(401).json({
+        message: 'Required field is missing'
+      })
+    }
+
+    const existUser = await User.findOne({email});
+
+    if(!existUser){
+      res.status(400).json({
+        message: 'Invalid credentials'
+      })
+    }
+
+    if(!existUser.isActive){
+      res.status(400).json({
+        message: 'Please verify your email'
+      })
+    }
+
+    const checkPass = await bcrypt.compare(password, existUser.password);
+
+    if(!checkPass){
+      res.status(400).json({
+        message: 'Invalid credentials'
+      })
+    }
+
+    let token = jwt.sign(
+    { id: existUser._id },
+    process.env.JWT_SECRET, 
+    { expiresIn: "1h" }
+    );
+
+    res.status(201).json({
+      message: 'User login successfully',
+      token,
+      existUser
+    })
+
+  } catch (error) {
+    res.status(500).json({
+      message: 'An error occur while login user',
+      error: error.message
+    })
+  }
+}
+
+export { registerUser, uploadUser, verifyUser, loginUser };

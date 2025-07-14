@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const SignupForm = () => {
@@ -13,6 +14,8 @@ const SignupForm = () => {
     employment: '',
     address: '',
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -55,7 +58,12 @@ const SignupForm = () => {
     // TODO: Replace with your actual API endpoint
     await axios.post("http://localhost:8080/api/v1/users/register", sendData)
       .then((res) => {
-        alert("Signup successful!");
+        alert("Signup successful!: Now check your email.");
+        navigate('/verify', {
+          state: {
+            email: res.data.user.email
+          },
+        })
         console.log(res.data);
       })
       .catch((err) => {
@@ -143,6 +151,9 @@ const SignupForm = () => {
           Create Account
         </button>
       </form>
+      <p className="text-center text-sm text-gray-600 mt-4">
+          Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Sign in</Link>
+      </p>
     </div>
   );
 };
