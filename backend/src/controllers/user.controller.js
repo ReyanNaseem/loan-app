@@ -38,7 +38,6 @@ const registerUser = async (req, res)=>{
         employment,
         address,
         imageUrl,
-        otp: otp
       };
 
       const user = await User.create(objToSend);
@@ -53,11 +52,11 @@ const registerUser = async (req, res)=>{
         }
       );
 
-      const trasnporter = nodemailer.createTransport({
+      const transporter = nodemailer.createTransport({
         service: "Gmail",
         auth: {
-          user: "reyannaseem516@gmail.com",
-          pass: "nodemailerpassreyan",
+          user: process.env.EMAIL,
+          pass: process.env.EMAIL_PASS,
         },
       });
 
@@ -78,7 +77,7 @@ const registerUser = async (req, res)=>{
       `,
       };
 
-      await trasnporter.sendMail(mailOption);
+      await transporter.sendMail(mailOption);
 
       // signup user
       return res.status(201).json({
