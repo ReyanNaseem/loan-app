@@ -38,9 +38,11 @@ const registerUser = async (req, res)=>{
         employment,
         address,
         imageUrl,
+        otp
       };
 
-      const user = await User.create(objToSend);
+      const createUser = await User.create(objToSend);
+      const user = await User.findById(createUser._id).select('-password -otp');
 
       let token = jwt.sign(
         {
@@ -61,7 +63,7 @@ const registerUser = async (req, res)=>{
       });
 
       const mailOption = {
-        from: "reyannaseem516@gmail.com",
+        from: process.env.EMAIL,
         to: email,
         subject: "Your OTP Code",
         html: `
@@ -85,11 +87,14 @@ const registerUser = async (req, res)=>{
         user,
         token
       });
+
     } catch (error) {
+
       return res.status(500).json({
         message: "An error occurred while register user",
         error: error.message,
       });
+
     }
 }
 
@@ -109,16 +114,17 @@ const uploadUser = async (req, res)=>{
 }
 
 const verifyUser = async (req, res)=>{
+
   try {
     const { email, otp } = req.body;
     const existUser = await User.findOne({email});
-
+    
     if(existUser.otp !== otp){
       res.status(401).json({
-        message: 'OTP not verified',
+        message: 'OTP not match',
       })
     }
-    console.log(existUser);
+
     existUser.isActive = true;
     await existUser.save();
 

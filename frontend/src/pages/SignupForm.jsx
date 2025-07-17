@@ -40,7 +40,8 @@ const SignupForm = () => {
 
     const imageData = new FormData();
     imageData.append("image", imageFile);
-
+console.log(`${import.meta.env.VITE_BASE_URL}/upload`);
+  // return
     const res = await axios.post(
       `${import.meta.env.VITE_BASE_URL}/upload`,
       imageData
@@ -66,7 +67,7 @@ const SignupForm = () => {
         console.log(res.data);
       })
       .catch((err) => {
-        console.error(err);
+        console.error(err.response.data.message);
         alert("Signup failed");
       });
   };

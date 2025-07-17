@@ -1,22 +1,37 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const OtpVerify = ({ onVerify }) => {
+const OtpVerify = () => {
   const OTP_LENGTH = 4;
   const [otp, setOtp] = useState(new Array(OTP_LENGTH).fill(''));
+  const [email, setEmail] = useState('');
   const inputsRef = useRef([]);
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleChange = (value, index) => {
-    if (!/^[0-9]?$/.test(value)) return; // Allow only digits
+  // ✅ Save or restore email
+  useEffect(() => {
+    const emailFromState = location.state?.email;
+    if (emailFromState) {
+      setEmail(emailFromState);
+      localStorage.setItem('otpEmail', emailFromState); // Save for refresh
+    } else {
+      const emailFromStorage = localStorage.getItem('otpEmail');
+      if (emailFromStorage) {
+        setEmail(emailFromStorage);
+      } else {
+        alert("No email found. Redirecting to signup...");
+        navigate('/signup'); // Redirect if no email
+      }
+    }
+  }, [location.state, navigate]);
 
+  const handleChange = (value, index) => {
+    if (!/^[0-9]?$/.test(value)) return;
     const updatedOtp = [...otp];
     updatedOtp[index] = value;
     setOtp(updatedOtp);
-
-    // Auto-focus next
     if (value && index < OTP_LENGTH - 1) {
       inputsRef.current[index + 1].focus();
     }
@@ -32,16 +47,18 @@ const OtpVerify = ({ onVerify }) => {
     e.preventDefault();
     const code = otp.join('');
     if (code.length === OTP_LENGTH) {
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/verify`, {email:location.state.email})
-      .then((res)=>{
-          console.log(res.data);
-          navigate('/login');
-      })
-      .catch((err)=>{
-        console.error(err);
-        alert("Virification failed");
-      })
-
+      try {
+        const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/verify`, {
+          email: email,
+          otp: code
+        });
+        console.log(res.data);
+        localStorage.removeItem('otpEmail'); // ✅ Clear email after verification
+        navigate('/login');
+      } catch (err) {
+        console.error(err.response.data.message);
+        alert("Verification failed");
+      }
     } else {
       alert('Please enter complete OTP.');
     }
@@ -51,7 +68,7 @@ const OtpVerify = ({ onVerify }) => {
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md mt-10">
       <h2 className="text-xl font-semibold text-center text-blue-600 mb-4">Verify OTP</h2>
       <p className="text-center text-gray-600 mb-6">
-        Enter the 4-digit code sent to your email.
+        Enter the 4-digit code sent to your email <strong>{email}</strong>.
       </p>
       <form onSubmit={handleSubmit} className="flex flex-col items-center space-y-4">
         <div className="flex justify-center gap-2">

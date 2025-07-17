@@ -23,35 +23,14 @@ const LoginForm = () => {
     e.preventDefault();
     setLoading(true);
 
-    // TODO: Replace with your real API endpoint
-    // try {
-    //   const res = await fetch('/api/login', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(formData),
-    //   });
     axios.post(`${import.meta.env.VITE_BASE_URL}/login`, formData)
     .then((res)=>{
-        console.log(res.data);
+        console.log(res.data.response);
         navigate('/home');
     })
     .catch((err)=>{
         console.log(err);
     })
-
-    //   const result = await res.json();
-
-    //   if (res.ok) {
-    //     alert('Login successful!');
-    //     // TODO: Navigate to dashboard or OTP verification
-    //     // navigate('/dashboard') or navigate('/verify-otp')
-    //   } else {
-    //     alert(result.message || 'Login failed');
-    //   }
-    // } catch (error) {
-    //   console.error('Login error:', error);
-    //   alert('Server error during login.');
-    // }
 
     setLoading(false);
   };
