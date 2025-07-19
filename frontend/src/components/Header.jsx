@@ -1,24 +1,41 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { Bounce, toast } from 'react-toastify';
 
 // Dummy user data (replace with real auth user)
-const user = {
-  name: 'John Doe',
-  email: 'john@example.com',
-  image: 'https://i.pravatar.cc/40',
-};
 
 const Header = () => {
+
+  const { email, fullName, imageUrl } = useSelector((state) => state.auth)
+  const user = {
+    email,
+    fullName,
+    imageUrl
+  };
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
+
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    toast.success('User Logout!!!', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
     navigate('/login');
   };
 
@@ -47,7 +64,7 @@ const Header = () => {
           {/* Profile Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <img
-              src={user.image}
+              src={user.imageUrl}
               alt="User Avatar"
               className="w-10 h-10 rounded-full border-2 border-white cursor-pointer"
               onClick={() => setDropdownOpen((prev) => !prev)}
@@ -55,7 +72,7 @@ const Header = () => {
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-white text-gray-800 shadow-xl rounded-md p-4 z-50">
                 <div className="mb-2">
-                  <p className="font-semibold">{user.name}</p>
+                  <p className="font-semibold">{user.fullName}</p>
                   <p className="text-sm text-gray-500">{user.email}</p>
                 </div>
                 <hr className="my-2" />

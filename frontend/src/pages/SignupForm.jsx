@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify'
 
 const SignupForm = () => {
+  const baseUrl = import.meta.env.VITE_BASE_URL
+
   const [imageFile, setImageFile] = useState(null)
   const [formData, setFormData] = useState({
     fullName: '',
@@ -26,27 +29,22 @@ const SignupForm = () => {
   };
 
   const handleImageChange = (e) => {
-    // console.log('run')
-    // console.log(e.target.files[0])
     setImageFile(e.target.files[0])
   }
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(formData);
 
     let imageurl = "";
 
     const imageData = new FormData();
     imageData.append("image", imageFile);
-console.log(`${import.meta.env.VITE_BASE_URL}/upload`);
-  // return
+
     const res = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/upload`,
+      `${baseUrl}/upload`,
       imageData
     );
-    // console.log(res);
 
     imageurl = res.data.imageUrl;
 
@@ -54,22 +52,44 @@ console.log(`${import.meta.env.VITE_BASE_URL}/upload`);
       ...formData,
       imageUrl: imageurl,
     };
-    // console.log(sendData);
 
-    await axios.post(`${import.meta.env.VITE_BASE_URL}/register`, sendData)
+    await axios.post(`${baseUrl}/register`, sendData)
       .then((res) => {
-        alert("Signup successful!: Now check your email.");
+
+        toast.success("Signup successful!: Now check your email.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
         navigate('/verify', {
           state: {
             email: res.data.user.email
           },
         })
-        console.log(res.data);
+
       })
       .catch((err) => {
-        console.error(err.response.data.message);
-        alert("Signup failed");
+
+        toast.error(err.response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+
       });
+      
   };
 
   return (

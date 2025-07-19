@@ -1,6 +1,9 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { Bounce, toast } from 'react-toastify';
+import { setLoginData } from '../features/AuthSlice';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +13,7 @@ const LoginForm = () => {
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,11 +29,41 @@ const LoginForm = () => {
 
     axios.post(`${import.meta.env.VITE_BASE_URL}/login`, formData)
     .then((res)=>{
-        console.log(res.data.response);
-        navigate('/home');
+
+        dispatch(setLoginData(res.data.user))
+        localStorage.setItem("token",res.data.token)
+        toast.success(res.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        navigate('/home', {
+          state: {
+            getData: res.data.existUser
+          },
+        });
+
     })
     .catch((err)=>{
-        console.log(err);
+
+      toast.error(err.response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        
     })
 
     setLoading(false);

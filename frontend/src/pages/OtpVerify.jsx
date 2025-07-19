@@ -10,7 +10,6 @@ const OtpVerify = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // ✅ Save or restore email
   useEffect(() => {
     const emailFromState = location.state?.email;
     if (emailFromState) {
@@ -46,22 +45,50 @@ const OtpVerify = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const code = otp.join('');
+
     if (code.length === OTP_LENGTH) {
       try {
+
         const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/verify`, {
           email: email,
           otp: code
         });
-        console.log(res.data);
+
         localStorage.removeItem('otpEmail'); // ✅ Clear email after verification
         navigate('/login');
+
       } catch (err) {
-        console.error(err.response.data.message);
-        alert("Verification failed");
+
+        toast.error("Verification failed", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+
       }
+
     } else {
-      alert('Please enter complete OTP.');
+
+      toast.error("Please enter complete OTP.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+
     }
+
   };
 
   return (

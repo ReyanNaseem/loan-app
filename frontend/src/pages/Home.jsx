@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 
@@ -29,7 +29,7 @@ const loanCategories = [
 const Home = () => {
   return (
     <>
-    <Header/>
+    <Header />
     <div className="w-full bg-gray-100 text-gray-800">
       {/* Hero Section */}
       <section className="bg-blue-800 text-white py-20 px-6 text-center">

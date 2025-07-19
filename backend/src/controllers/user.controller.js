@@ -120,7 +120,7 @@ const verifyUser = async (req, res)=>{
     const existUser = await User.findOne({email});
     
     if(existUser.otp !== otp){
-      res.status(401).json({
+      return res.status(401).json({
         message: 'OTP not match',
       })
     }
@@ -128,12 +128,12 @@ const verifyUser = async (req, res)=>{
     existUser.isActive = true;
     await existUser.save();
 
-    res.status(201).json({
+    return res.status(201).json({
       message: 'Email verified successfully'
     })
 
   } catch (error) {
-    res.status(600).json({
+    return res.status(600).json({
       message: 'An error occur while verifying user',
       error: error.message
     })
@@ -143,8 +143,9 @@ const verifyUser = async (req, res)=>{
 const loginUser = async (req, res)=>{
   try {
     const { email, password } = req.body;
+
     if( !email || !password ){
-      res.status(401).json({
+      return res.status(401).json({
         message: 'Required field is missing'
       })
     }
@@ -152,13 +153,13 @@ const loginUser = async (req, res)=>{
     const existUser = await User.findOne({email});
 
     if(!existUser){
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Invalid credentials'
       })
     }
 
     if(!existUser.isActive){
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Please verify your email'
       })
     }
@@ -166,7 +167,7 @@ const loginUser = async (req, res)=>{
     const checkPass = await bcrypt.compare(password, existUser.password);
 
     if(!checkPass){
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Invalid credentials'
       })
     }
@@ -177,14 +178,18 @@ const loginUser = async (req, res)=>{
     { expiresIn: "1h" }
     );
 
-    res.status(201).json({
+    
+    const user = await User.findById(existUser._id).select("-password -otp")
+    console.log(req.body);
+
+    return res.status(201).json({
       message: 'User login successfully',
       token,
-      existUser
+      user
     })
 
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: 'An error occur while login user',
       error: error.message
     })
