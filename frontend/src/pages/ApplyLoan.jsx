@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import axios from 'axios';
+import { Bounce, toast } from 'react-toastify';
 
 const ApplyLoan = () => {
   const [form, setForm] = useState({
@@ -25,7 +27,24 @@ const ApplyLoan = () => {
     e.preventDefault();
     // Send form data to backend via API call here
     console.log(form);
-    alert('Loan application submitted successfully!');
+    axios.post(`${import.meta.env.VITE_BASE_URL}/loan`,form)
+    .then((res)=>{
+      console.log(res.data.message);
+      toast.success(res.data.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
   };
 
   return (
