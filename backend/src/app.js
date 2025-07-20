@@ -13,7 +13,6 @@ app.use(cors({
 }));
 
 // routes import
-// import multer from 'multer';
 import router from './routes/user.route.js';
 
 app.use("/api/v1/users", router)

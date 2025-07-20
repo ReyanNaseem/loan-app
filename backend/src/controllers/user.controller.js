@@ -180,7 +180,6 @@ const loginUser = async (req, res)=>{
 
     
     const user = await User.findById(existUser._id).select("-password -otp")
-    console.log(req.body);
 
     return res.status(201).json({
       message: 'User login successfully',

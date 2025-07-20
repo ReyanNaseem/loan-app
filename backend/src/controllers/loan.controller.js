@@ -8,8 +8,7 @@ const getLoan = async (req,res)=>{
             message: 'Required field is missing'
         })
     }
-    // console.log(req.body)
-    // return
+    
     const loan = await Loan.create(req.body);
 
     return res.status(201).json({
@@ -18,4 +17,4 @@ const getLoan = async (req,res)=>{
     })
 }
 
-export {getLoan};
+export { getLoan };

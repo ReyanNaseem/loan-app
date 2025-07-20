@@ -14,6 +14,4 @@ router.route("/loan").post(getLoan);
 const upload = multer({storage});
 router.route("/upload").post( upload.single('image'), uploadUser);
 
-// router.route("/categories").get(loanCategories)
-
 export default router;

@@ -29,7 +29,6 @@ const ApplyLoan = () => {
     console.log(form);
     axios.post(`${import.meta.env.VITE_BASE_URL}/loan`,form)
     .then((res)=>{
-      console.log(res.data.message);
       toast.success(res.data.message, {
         position: "top-right",
         autoClose: 5000,
@@ -43,7 +42,17 @@ const ApplyLoan = () => {
       });
     })
     .catch((err)=>{
-      console.log(err)
+      toast.error(err.response.data.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     })
   };
 
@@ -62,7 +71,7 @@ const ApplyLoan = () => {
             <input
               type="text"
               name="fullName"
-              required
+              // required
               value={form.fullName}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1"
