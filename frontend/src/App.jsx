@@ -21,10 +21,10 @@ function App() {
         <Route element={<IsLogin/>}>
           <Route path='/' element={<SignupForm/>}/>
           <Route path='/login' element={<LoginForm/>}/>
+          <Route path='/verify' element={<OtpVerify/>}/>
         </Route>
 
         <Route element={<AuthGuard/>}>
-          <Route path='/verify' element={<OtpVerify/>}/>
           <Route path='/home' element={<Home/>}/>
           <Route path='/apply-loan' element={<ApplyLoan/>}/>
           <Route path='/categories' element={<LoanCategories/>}/>

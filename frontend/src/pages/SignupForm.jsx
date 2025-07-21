@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify'
+import { Bounce, toast } from 'react-toastify'
 
 const SignupForm = () => {
   const baseUrl = import.meta.env.VITE_BASE_URL
