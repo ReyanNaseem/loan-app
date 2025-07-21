@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Bounce, toast } from 'react-toastify';
 
 const OtpVerify = () => {
   const OTP_LENGTH = 4;
@@ -53,8 +54,19 @@ const OtpVerify = () => {
           email: email,
           otp: code
         });
-
+        console.log(res);
         localStorage.removeItem('otpEmail'); // ✅ Clear email after verification
+        toast.success(res.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
         navigate('/login');
 
       } catch (err) {
