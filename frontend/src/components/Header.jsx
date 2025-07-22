@@ -8,11 +8,12 @@ import { Bounce, toast } from 'react-toastify';
 
 const Header = () => {
 
-  const { email, fullName, imageUrl } = useSelector((state) => state.auth)
+  const { auth } = useSelector((state) => state)
+
   const user = {
-    email,
-    fullName,
-    imageUrl
+    email:auth.email,
+    fullName: auth.fullName,
+    imageUrl: auth.imageUrl
   };
 
   const [menuOpen, setMenuOpen] = useState(false);

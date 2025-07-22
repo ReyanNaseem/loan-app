@@ -13,7 +13,7 @@ const LoginForm = () => {
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;

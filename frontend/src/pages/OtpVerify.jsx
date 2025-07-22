@@ -54,7 +54,6 @@ const OtpVerify = () => {
           email: email,
           otp: code
         });
-        console.log(res);
         localStorage.removeItem('otpEmail'); // ✅ Clear email after verification
         toast.success(res.data.message, {
           position: "top-right",
